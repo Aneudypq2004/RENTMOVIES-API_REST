@@ -25,7 +25,7 @@ namespace RENTMOVIES
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 			builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
-			builder.Services.AddAutoMapper(typeof(Program));
+			builder.Services.AddAutoMapper(typeof(UsuarioMapper));
 
 
 			var app = builder.Build();

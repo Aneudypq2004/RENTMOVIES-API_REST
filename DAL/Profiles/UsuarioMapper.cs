@@ -6,22 +6,24 @@ using System.Text;
 using System.Threading.Tasks;
 using ENTIDADES.Models;
 using DAL.DTO.Response;
+using DAL.DTO.Request;
 namespace DAL.Profiles
 {
     public class UsuarioMapper:Profile
 	{ 
 
 		public UsuarioMapper() {
-		
-			CreateMap<UsuarioDTO, Usuario>()
-			.ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignorar la propiedad Id
-			.ForMember(dest => dest.Edad, opt => opt.Ignore()) // Ignorar la propiedad Edad
-			.ForMember(dest => dest.Alquilers, opt => opt.Ignore()); // Ignorar la propiedad Alquilers
 
-		
+			CreateMap<UsuarioResponseDTO, Usuario>()
+		.ForMember(dest => dest.Id, opt => opt.Ignore())
+		.ForMember(dest => dest.Edad, opt => opt.Ignore())
+		.ForMember(dest => dest.Alquilers, opt => opt.Ignore());
+
+			CreateMap<Usuario, UsuarioRequestDTO>().ReverseMap();
+
 		}
-		
 
-		
+
+
 	}
 }

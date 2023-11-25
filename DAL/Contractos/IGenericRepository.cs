@@ -12,7 +12,7 @@ namespace DAL.Contractos
 		public Task<bool> Create(Entity entity);
 		public Task<bool> Update(Entity entity);
 		public Task<bool> Delete(int id);
-		public IQueryable<Entity> GetAll();
+		public Task<IEnumerable<Entity>> GetAll();
 
 	}
 }

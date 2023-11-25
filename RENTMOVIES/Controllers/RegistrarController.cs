@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ENTIDADES.Models;
 using AutoMapper;
 using DAL.DTO.Response;
+using DAL.DTO.Request;
 
 namespace RENTMOVIES.Controllers
 {
@@ -20,16 +21,9 @@ namespace RENTMOVIES.Controllers
 			this._mapper = mapper;
 		}
 
-		[HttpGet]
-		public ActionResult GetAll()
-		{
-			var usuariosdb = _repository.GetAll();
-			return Ok(usuariosdb);
-		}
-
 		[HttpPost]
 
-		public ActionResult Post([FromBody]UsuarioDTO usuarioDTO)
+		public ActionResult Post([FromBody]UsuarioResponseDTO usuarioDTO)
 		{
 
 			if (!ModelState.IsValid)

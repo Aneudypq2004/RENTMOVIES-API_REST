@@ -38,9 +38,9 @@ namespace DAL.Repositorios
 			return true;
 		}
 
-		public IQueryable<Usuario> GetAll()
+		public async Task<IEnumerable<Usuario>> GetAll()
 		{
-			var usuario = _dbContext.Usuarios.AsQueryable();
+			var usuario = await  _dbContext.Usuarios.ToListAsync();
 			return usuario;
 
 		}

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DTO.Response
 {
-    public class DireccionDTO
+    public class DireccionResponseDTO
     {
 
         [Required(ErrorMessage = "Coloque un municipio.")]

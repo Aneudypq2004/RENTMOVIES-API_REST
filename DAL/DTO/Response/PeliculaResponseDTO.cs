@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DTO.Response
 {
-    public class AlquilerDTO
+    public class PeliculaResponseDTO
     {
     }
 }

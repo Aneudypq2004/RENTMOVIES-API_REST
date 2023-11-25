@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DTO.Response
 {
-    public class UsuarioDTO
+    public class UsuarioResponseDTO
     {
         [Required(ErrorMessage = "Coloque un nombre.")]
         public string Nombre { get; set; }
@@ -19,8 +19,6 @@ namespace DAL.DTO.Response
         public string UserName { get; set; }
         [Required(ErrorMessage = "Coloque una contraseña.")]
         public string Contraseña { get; set; }
-        [Required(ErrorMessage = "La contraseña debe coincidir.")]
-        [Compare("Contraseña")]
-        public string ContraseñaConfirmacion { get; set; }
+     
     }
 }

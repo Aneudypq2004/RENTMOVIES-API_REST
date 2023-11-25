@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.DTO.Response
+namespace DAL.DTO.Request
 {
-    public class CostoDTO
-    {
-    }
+	public class CostoRequestDTO
+	{
+	}
 }
