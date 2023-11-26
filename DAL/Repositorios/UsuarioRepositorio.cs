@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL.Data;
+
 using DAL.Contractos;
 using ENTIDADES.Models;
+using DAL.Data;
 
 namespace DAL.Repositorios
 {

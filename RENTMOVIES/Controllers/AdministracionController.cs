@@ -29,7 +29,7 @@ namespace RENTMOVIES.Controllers
 			var usuario = _mapper.Map<List<UsuarioRequestDTO>>(usuariosdb);
 			return Ok(usuario);
 		}
-
+		
 
 
 	}

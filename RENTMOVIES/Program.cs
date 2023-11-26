@@ -6,6 +6,7 @@ using DAL.Profiles;
 using DAL.Data;
 using DAL.Repositorios;
 
+
 namespace RENTMOVIES
 {
 	public class Program

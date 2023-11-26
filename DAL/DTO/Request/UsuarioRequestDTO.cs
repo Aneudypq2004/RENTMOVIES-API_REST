@@ -14,11 +14,9 @@ namespace DAL.DTO.Request
 		public string UserName { get; set; }
 		public int Edad { get; set; }
 		public int RoleId { get; set; }
-		public string? Email { get; set; }
-
-		public string? Token { get; set; }
-
-		public bool? Verificado { get; set; }
+		public string Email { get; set; }
+		public string Token { get; set; }
+		public bool Verificado { get; set; }
 
 	}
 
