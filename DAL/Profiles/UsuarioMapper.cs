@@ -15,9 +15,7 @@ namespace DAL.Profiles
 		public UsuarioMapper() {
 
 			CreateMap<UsuarioResponseDTO, Usuario>()
-		.ForMember(dest => dest.Id, opt => opt.Ignore())
-		.ForMember(dest => dest.Edad, opt => opt.Ignore())
-		.ForMember(dest => dest.Alquilers, opt => opt.Ignore());
+			.ForMember(dest => dest.Contraseña, opt => opt.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.Contraseña)));
 
 			CreateMap<Usuario, UsuarioRequestDTO>().ReverseMap();
 

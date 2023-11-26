@@ -21,6 +21,6 @@ namespace DAL.DTO.Response
         public string Contraseña { get; set; }
 
 		[Required(ErrorMessage = "Coloque un correo.")]
-		public string? Email { get; set; }
+		public string Email { get; set; }
 	}
 }

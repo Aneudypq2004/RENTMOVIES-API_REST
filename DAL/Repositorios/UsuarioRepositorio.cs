@@ -6,10 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using DAL.Contractos;
 using ENTIDADES.Models;
 using DAL.Data;
+using Microsoft.Identity.Client;
 
 namespace DAL.Repositorios
 {
@@ -25,11 +24,14 @@ namespace DAL.Repositorios
 		}
 		public async Task<bool> Create(Usuario entity)
 		{
+			entity.Edad = CalcularEdad(entity);
+			entity.Token = generarToken();
 			_dbContext.Add(entity);
+
 			await _dbContext.SaveChangesAsync();
 			return true;
-
 		}
+
 
 
 		public async Task<bool> Delete(int id)
@@ -80,10 +82,42 @@ namespace DAL.Repositorios
 			}
 
 
+		
 		}
 
+		public async Task<Usuario> GetByUserName(string name)
+		{
+			var usuario = await _dbContext.Usuarios.Where(n => n.UserName == name).FirstOrDefaultAsync();
+			return usuario;
+		
+		}
+
+		public int CalcularEdad(Usuario entity )
+		{
+			if (entity.FechaNac.HasValue)
+			{
+				// Calcula la edad a partir de la fecha de nacimiento
+				int edad = DateTime.Now.Year - entity.FechaNac.Value.Year;
+				if (DateTime.Now < entity.FechaNac.Value.AddYears(edad))
+				{
+					edad--; // Todavía no ha celebrado su cumpleaños este año
+				}
+				return edad;
+			}
+			else
+				return 0;
+		}
+
+		public string generarToken()
+		{
+			Guid guid = Guid.NewGuid();
+			return guid.ToString();
+		}
+
+		
 	}
 
+	
 }
 
 

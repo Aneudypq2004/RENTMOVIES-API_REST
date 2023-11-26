@@ -14,27 +14,10 @@ public  class Usuario
 
     public DateTime? FechaNac { get; set; }
 
-	public int? Edad
-	{
-		get
-		{
-			if (FechaNac.HasValue)
-			{
-				// Calcula la edad a partir de la fecha de nacimiento
-				int edad = DateTime.Now.Year - FechaNac.Value.Year;
-				if (DateTime.Now < FechaNac.Value.AddYears(edad))
-				{
-					edad--; // Todavía no ha celebrado su cumpleaños este año
-				}
-				return edad;
-			}
-			return null; // Devuelve null si no hay fecha de nacimiento
-		}
-	}
-
+	public int? Edad { get; set;}
 
 	public string? UserName { get; set; }
-
+	
 	public string? Email { get; set; }
 
 	public string? Token { get; set; }
