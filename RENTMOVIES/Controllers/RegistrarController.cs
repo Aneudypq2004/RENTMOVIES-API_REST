@@ -22,7 +22,6 @@ namespace RENTMOVIES.Controllers
 		}
 
 		[HttpPost]
-
 		public ActionResult Post([FromBody]UsuarioResponseDTO usuarioDTO)
 		{
 

@@ -148,7 +148,12 @@ public partial class RentmovieContext : DbContext
             entity.Property(e => e.Nombre)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.RoleId).HasColumnName("roleId");
+			entity.Property(e => e.Email).HasMaxLength(255);
+			entity.Property(e => e.Token).HasMaxLength(255);
+			entity.Property(e => e.Verificado)
+			.IsUnicode(false)
+            .HasMaxLength(2);
+			entity.Property(e => e.RoleId).HasColumnName("roleId");
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
