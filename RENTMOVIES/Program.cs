@@ -5,6 +5,7 @@ using ENTIDADES.Models;
 using DAL.Profiles;
 using DAL.Data;
 using DAL.Repositorios;
+using BAL.Services;
 
 namespace RENTMOVIES
 {
@@ -20,7 +21,12 @@ namespace RENTMOVIES
 			{
 				opciones.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL"));
 			});
-			builder.Services.AddControllers();
+
+            //Email
+            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+            builder.Services.AddSingleton<IEmailService, EmailService>();
+
+            builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
