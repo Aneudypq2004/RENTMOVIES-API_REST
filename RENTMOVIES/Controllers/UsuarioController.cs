@@ -41,9 +41,9 @@ namespace RENTMOVIES.Controllers
 		{
 			Usuario user = await _repository.GetByUserName(username);
 
-			if (user == null)
+			if (user is null)
 			{
-				return BadRequest(new { msg = "The user doesnt exits" });
+				return BadRequest(new { msg = "The user doesnt exists" });
 			}
 			
 			// Validate the password
@@ -52,7 +52,7 @@ namespace RENTMOVIES.Controllers
 
 			if (!ValidPass)
 			{
-				return Unauthorized(new { msg = "The password is invalid" });
+				return Unauthorized(new { msg = "The password is not valid" });
 			}
 
 			// return access token
