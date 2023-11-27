@@ -35,31 +35,34 @@ namespace RENTMOVIES.Controllers
 			await _repository.Create(usuario);
 			return Ok();
 		}
-		
+
 		[HttpPost("Login")]
 		public async Task<ActionResult> Login(string username, string password)
 		{
 			Usuario user = await _repository.GetByUserName(username);
 
-			if (user != null)
+			if (user == null)
 			{
-				bool ValidPass = BCrypt.Net.BCrypt.Verify(password, user.Contraseña);
-				if (ValidPass)
-				{
-					return Ok();
-				}
-				else
-				{
-					return BadRequest();
-				}
+				return BadRequest(new { msg = "The user doesnt exits" });
 			}
-			else
+			
+			// Validate the password
+
+			bool ValidPass = BCrypt.Net.BCrypt.Verify(password, user.Contraseña);
+
+			if (!ValidPass)
 			{
-				return BadRequest();
+				return Unauthorized(new { msg = "The password is invalid" });
 			}
+
+			// return access token
+
+			return Ok(new
+			{
+				token = ""
+			});
 
 		}
-
-
+	
 	}
 }
