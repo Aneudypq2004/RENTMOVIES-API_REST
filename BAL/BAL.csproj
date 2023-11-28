@@ -4,14 +4,19 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>fae47b24-c7b1-4c35-bc16-cc88d03eb574</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Servicios\" />
+    <Compile Remove="Servicios\**" />
+    <EmbeddedResource Remove="Servicios\**" />
+    <None Remove="Servicios\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="MailKit" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
