@@ -30,11 +30,14 @@ namespace DAL.Repositorios
 		}
 		public async Task<bool> Create(Usuario entity)
 		{
-			entity.Edad = CalcularEdad(entity);
+			//entity.Edad = CalcularEdad(entity);
+
 			entity.Token = generarToken();
+
 			_dbContext.Add(entity);
 
 			await _dbContext.SaveChangesAsync();
+			
 			return true;
 		}
 

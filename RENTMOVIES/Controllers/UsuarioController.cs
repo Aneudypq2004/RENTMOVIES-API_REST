@@ -21,7 +21,7 @@ namespace RENTMOVIES.Controllers
         private readonly IUsuarioRepositorio _repository;
         private readonly IMapper _mapper;
         private readonly IAuthServices _authService;
-  
+
         public UsuarioController(IUsuarioRepositorio repository, IMapper mapper, IAuthServices authServices)
         {
             this._repository = repository;
@@ -29,7 +29,7 @@ namespace RENTMOVIES.Controllers
             this._authService = authServices;
         }
 
-        [HttpPost("Register")]
+        [HttpPost("Registrar")]
         public async Task<ActionResult> Register([FromBody] UsuarioResponseDTO usuarioDTO)
         {
 
@@ -37,9 +37,12 @@ namespace RENTMOVIES.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var usuario = _mapper.Map<Usuario>(usuarioDTO);
+
             await _repository.Create(usuario);
-            return Ok();
+
+            return Ok(new { msg = "Account Created, Check your email" });
         }
 
 

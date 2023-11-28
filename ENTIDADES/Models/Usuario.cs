@@ -32,7 +32,7 @@ public  class Usuario
 
     public virtual Direccion? Direccion { get; set; }
 
-	public int? RoleId { get; set; } = 2;
+	public int? RoleId { get; set; } = 1;
 
 	public virtual Role? Role { get; set; }
 }
