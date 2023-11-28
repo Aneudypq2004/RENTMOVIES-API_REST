@@ -1,4 +1,5 @@
-﻿using ENTIDADES.Models;
+﻿using BAL.Services.IServices;
+using ENTIDADES.Models;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;

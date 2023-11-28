@@ -6,63 +6,70 @@ using ENTIDADES.Models;
 using AutoMapper;
 using DAL.DTO.Response;
 using DAL.DTO.Request;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using BAL.Services.IServices;
 
 namespace RENTMOVIES.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class UsuarioController : ControllerBase
-	{
-		private readonly IUsuarioRepositorio _repository;
-		private readonly IMapper _mapper;
-		public UsuarioController(IUsuarioRepositorio repository, IMapper mapper)
-		{
-			this._repository = repository;
-			this._mapper = mapper;
-		}
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsuarioController : ControllerBase
+    {
+        private readonly IUsuarioRepositorio _repository;
+        private readonly IMapper _mapper;
+        private readonly IAuthServices _authService;
+  
+        public UsuarioController(IUsuarioRepositorio repository, IMapper mapper, IAuthServices authServices)
+        {
+            this._repository = repository;
+            this._mapper = mapper;
+            this._authService = authServices;
+        }
 
-		
-		[HttpPost("Register")]
-		
-		public async Task<ActionResult> Register([FromBody] UsuarioResponseDTO usuarioDTO)
-		{
+        [HttpPost("Register")]
+        public async Task<ActionResult> Register([FromBody] UsuarioResponseDTO usuarioDTO)
+        {
 
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-			var usuario = _mapper.Map<Usuario>(usuarioDTO);
-			await _repository.Create(usuario);
-			return Ok();
-		}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var usuario = _mapper.Map<Usuario>(usuarioDTO);
+            await _repository.Create(usuario);
+            return Ok();
+        }
 
-		[HttpPost("Login")]
-		public async Task<ActionResult> Login(string username, string password)
-		{
-			Usuario user = await _repository.GetByUserName(username);
 
-			if (user is null)
-			{
-				return BadRequest(new { msg = "The user doesnt exists" });
-			}
-			
-			// Validate the password
+        [HttpPost("Login")]
+        public async Task<ActionResult> Login([FromBody] Usuario usuario)
+        {
+            Usuario user = await _repository.GetByUserName(usuario.UserName);
 
-			bool ValidPass = BCrypt.Net.BCrypt.Verify(password, user.Contraseña);
+            if (user is null)
+            {
+                return BadRequest(new { msg = "The user doesnt exists" });
+            }
 
-			if (!ValidPass)
-			{
-				return Unauthorized(new { msg = "The password is not valid" });
-			}
+            // Validate the password
 
-			// return access token
+            bool ValidPass = BCrypt.Net.BCrypt.Verify(usuario.Contraseña, user.Contraseña);
 
-			return Ok(new
-			{
-				token = ""
-			});
+            if (!ValidPass)
+            {
+                return Unauthorized(new { msg = "The password is not valid" });
+            }
 
-		}
-	
-	}
+            // return access token
+
+            return Ok(new
+            {
+                token = _authService.GenerateJWT(user.Email)
+
+            });
+
+        }
+    }
 }

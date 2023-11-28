@@ -9,17 +9,23 @@ using System.Threading.Tasks;
 using ENTIDADES.Models;
 using DAL.Data;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 
 namespace DAL.Repositorios
 {
 	public class UsuarioRepositorio : IUsuarioRepositorio
 	{
-		private readonly RentmovieContext _dbContext;
+		private readonly RentmovieContext _dbContext; 
+		private readonly IConfiguration _config;
 
 
-		public UsuarioRepositorio(RentmovieContext dbContext)
+        public UsuarioRepositorio(RentmovieContext dbContext, IConfiguration config)
 		{
 			_dbContext = dbContext;
+			this._config = config;
 
 		}
 		public async Task<bool> Create(Usuario entity)
@@ -31,8 +37,6 @@ namespace DAL.Repositorios
 			await _dbContext.SaveChangesAsync();
 			return true;
 		}
-
-
 
 		public async Task<bool> Delete(int id)
 		{
@@ -113,11 +117,7 @@ namespace DAL.Repositorios
 			Guid guid = Guid.NewGuid();
 			return guid.ToString();
 		}
-
-		
-	}
-
-	
+    }
 }
 
 
