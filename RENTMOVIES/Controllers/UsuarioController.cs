@@ -29,6 +29,8 @@ namespace RENTMOVIES.Controllers
             this._authService = authServices;
         }
 
+        // Create a new User
+
         [HttpPost("Registrar")]
         public async Task<ActionResult> Register([FromBody] UsuarioResponseDTO usuarioDTO)
         {
@@ -52,6 +54,7 @@ namespace RENTMOVIES.Controllers
             }
         }
 
+        // SIGN IN METHOD
 
         [HttpPost("Login")]
         public async Task<ActionResult> Login([FromBody] UserLogin usuario)
@@ -64,6 +67,14 @@ namespace RENTMOVIES.Controllers
                 if (user is null)
                 {
                     return BadRequest(new { msg = "The user doesnt exists" });
+                }
+
+                // Validate if the user is verified
+
+                if (!user.Verificado)
+                {
+                    return Unauthorized(new { msg = "Please, confirm your account" });
+
                 }
 
                 // Validate the password
@@ -90,5 +101,32 @@ namespace RENTMOVIES.Controllers
                 return BadRequest();
             }
         }
+
+        // Confirm account
+        [HttpGet("Confirm/{token}")]
+        public async Task<ActionResult> ConfirmAccount([FromRoute] String token)
+        {
+            try
+            {
+                Usuario user = await _repository.GetByToken(token);
+
+                if(user is null)
+                {
+                    return NotFound(new { msg = "The token is not valid" });
+                }
+
+                await _repository.ConfirmUser(user);
+
+                return Ok(new { msg = "Account verified successfully" });
+
+            }
+            catch (Exception message)
+            {
+
+                return BadRequest(new { msg = message }); 
+            }
+
+        }
+
     }
 }
