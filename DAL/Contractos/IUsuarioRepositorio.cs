@@ -12,5 +12,6 @@ namespace DAL.Contractos
 		Task<Usuario> GetByName(string name);
 
 		Task<Usuario> GetByUserName(string name);
+		Task<Usuario> GetByEmail(string name);
 	}
 }

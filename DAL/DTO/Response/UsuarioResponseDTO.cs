@@ -22,5 +22,8 @@ namespace DAL.DTO.Response
 
 		[Required(ErrorMessage = "Coloque un correo.")]
 		public string Email { get; set; }
+
+		//[Required(ErrorMessage = "Coloque su direccion")]
+		//public DireccionResponseDTO direccion { get; set; }
 	}
 }

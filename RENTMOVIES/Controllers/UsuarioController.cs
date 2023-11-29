@@ -54,12 +54,12 @@ namespace RENTMOVIES.Controllers
 
 
         [HttpPost("Login")]
-        public async Task<ActionResult> Login([FromBody] Usuario usuario)
+        public async Task<ActionResult> Login([FromBody] UserLogin usuario)
         {
             try
             {
 
-                Usuario user = await _repository.GetByUserName(usuario.UserName);
+                Usuario user = await _repository.GetByEmail(usuario.Email);
 
                 if (user is null)
                 {
@@ -68,7 +68,7 @@ namespace RENTMOVIES.Controllers
 
                 // Validate the password
 
-                bool ValidPass = BCrypt.Net.BCrypt.Verify(usuario.Contraseña, user.Contraseña);
+                bool ValidPass = BCrypt.Net.BCrypt.Verify(usuario.Password, user.Contraseña);
 
                 if (!ValidPass)
                 {

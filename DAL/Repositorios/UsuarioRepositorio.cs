@@ -186,7 +186,21 @@ namespace DAL.Repositorios
 			Guid guid = Guid.NewGuid();
 			return guid.ToString();
 		}
-    }
+
+		public async Task<Usuario> GetByEmail(string name)
+		{
+			try
+			{
+				var usuario = await _dbContext.Usuarios.Where(n => n.Email == name).FirstOrDefaultAsync();
+				return usuario;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Se ha producido una excepción: {ex.Message}");
+				return null;
+			}
+		}
+	}
 }
 
 
