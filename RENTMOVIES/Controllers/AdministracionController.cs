@@ -25,9 +25,17 @@ namespace RENTMOVIES.Controllers
 		[Route("ListaUsuarios")]
 		public async Task<ActionResult> GetAll()
 		{
-			var usuariosdb = await  _repository.GetAll();
-			var usuario = _mapper.Map<List<UsuarioRequestDTO>>(usuariosdb);
-			return Ok(usuario);
+			try
+			{
+				var usuariosdb = await _repository.GetAll();
+				var usuario = _mapper.Map<List<UsuarioRequestDTO>>(usuariosdb);
+				return Ok(usuario);
+			}
+			catch(Exception ex)
+			{
+				Console.WriteLine($"Se ha producido una excepción durante la creacion del usuario: {ex.Message}");
+				return StatusCode(500,"Ocurrió un error interno en el servidor");
+			}
 		}
 		
 

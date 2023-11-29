@@ -36,10 +36,11 @@ namespace BAL.Services
                     await client.DisconnectAsync(true);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Excepción: {ex.Message}"); 
 
-            }
+			}
         }
     }
 }

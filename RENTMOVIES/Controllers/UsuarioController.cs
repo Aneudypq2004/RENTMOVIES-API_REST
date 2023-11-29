@@ -32,47 +32,63 @@ namespace RENTMOVIES.Controllers
         [HttpPost("Registrar")]
         public async Task<ActionResult> Register([FromBody] UsuarioResponseDTO usuarioDTO)
         {
-
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var usuario = _mapper.Map<Usuario>(usuarioDTO);
+
+                await _repository.Create(usuario);
+
+                return Ok(new { msg = "Account Created, Check your email" });
             }
-
-            var usuario = _mapper.Map<Usuario>(usuarioDTO);
-
-            await _repository.Create(usuario);
-
-            return Ok(new { msg = "Account Created, Check your email" });
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Excepción: {ex.Message}");
+                return BadRequest(ex);
+            }
         }
 
 
         [HttpPost("Login")]
         public async Task<ActionResult> Login([FromBody] Usuario usuario)
         {
-            Usuario user = await _repository.GetByUserName(usuario.UserName);
-
-            if (user is null)
+            try
             {
-                return BadRequest(new { msg = "The user doesnt exists" });
+
+                Usuario user = await _repository.GetByUserName(usuario.UserName);
+
+                if (user is null)
+                {
+                    return BadRequest(new { msg = "The user doesnt exists" });
+                }
+
+                // Validate the password
+
+                bool ValidPass = BCrypt.Net.BCrypt.Verify(usuario.Contraseña, user.Contraseña);
+
+                if (!ValidPass)
+                {
+                    return Unauthorized(new { msg = "The password is not valid" });
+                }
+
+                // return access token
+
+                return Ok(new
+                {
+                    token = _authService.GenerateJWT(user.Email)
+
+                });
+
             }
-
-            // Validate the password
-
-            bool ValidPass = BCrypt.Net.BCrypt.Verify(usuario.Contraseña, user.Contraseña);
-
-            if (!ValidPass)
+            catch(Exception ex)
             {
-                return Unauthorized(new { msg = "The password is not valid" });
+                Console.WriteLine($"Excepción: {ex.Message}");
+                return BadRequest();
             }
-
-            // return access token
-
-            return Ok(new
-            {
-                token = _authService.GenerateJWT(user.Email)
-
-            });
-
         }
     }
 }
