@@ -103,6 +103,7 @@ namespace RENTMOVIES.Controllers
         }
 
         // Confirm account
+
         [HttpGet("Confirm/{token}")]
         public async Task<ActionResult> ConfirmAccount([FromRoute] String token)
         {
@@ -124,6 +125,61 @@ namespace RENTMOVIES.Controllers
             {
 
                 return BadRequest(new { msg = message }); 
+            }
+
+        }
+
+        // Forgot PASSWORD
+
+        [HttpPost("Forgot-password")]
+        public async Task<ActionResult> ForgotPassword([FromRoute] String token)
+        {
+            try
+            {
+                Usuario user = await _repository.GetByToken(token);
+
+                if (user is null)
+                {
+                    return NotFound(new { msg = "The token is not valid" });
+                }
+
+                await _repository.ConfirmUser(user);
+
+                return Ok(new { msg = "Account verified successfully" });
+
+            }
+            catch (Exception message)
+            {
+
+                return BadRequest(new { msg = message });
+            }
+
+        }
+
+
+        // Change password
+
+        [HttpPatch("Change-password/{token}")]
+        public async Task<ActionResult> ChangePassword([FromRoute] String token)
+        {
+            try
+            {
+                Usuario user = await _repository.GetByToken(token);
+
+                if (user is null)
+                {
+                    return NotFound(new { msg = "The token is not valid" });
+                }
+
+                await _repository.ConfirmUser(user);
+
+                return Ok(new { msg = "Account verified successfully" });
+
+            }
+            catch (Exception message)
+            {
+
+                return BadRequest(new { msg = message });
             }
 
         }
