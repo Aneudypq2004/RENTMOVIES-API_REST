@@ -20,7 +20,7 @@ namespace RENTMOVIES.Controllers
         private readonly IDireccionRepository _directionRepository;
         private readonly IEmailService _emailService;
 
-        public UsuarioController(IUsuarioRepositorio repository, IMapper mapper, IAuthServices authServices, IEmailService emailService)
+        public UsuarioController(IUsuarioRepositorio repository, IMapper mapper, IAuthServices authServices, IDireccionRepository direccionRepository, IEmailService emailService)
         {
             this._repository = repository;
             this._mapper = mapper;
