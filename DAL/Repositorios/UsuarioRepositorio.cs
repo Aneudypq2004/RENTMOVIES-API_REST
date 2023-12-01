@@ -89,9 +89,15 @@ namespace DAL.Repositorios
         {
             try
             {
-                _dbContext.Remove(id);
-                await _dbContext.SaveChangesAsync();
-                return true;
+			var usuario = await _dbContext.Usuarios.FindAsync(id);
+				
+				if (usuario == null)
+				{
+					return false;
+				}
+				_dbContext.Remove(usuario);
+				await _dbContext.SaveChangesAsync();
+				return true;
             }
             catch (Exception ex)
             {

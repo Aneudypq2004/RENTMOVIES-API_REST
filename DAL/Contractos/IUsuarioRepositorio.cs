@@ -15,5 +15,7 @@ namespace DAL.Contractos
 		Task<Usuario> GetByEmail(string name);
 
         Task<Usuario> GetByToken(string token);
-    }
+
+		public Task<bool> ConfirmUser(Usuario entity);
+	}
 }

@@ -22,7 +22,7 @@ public  class Usuario
 
 	public string? Token { get; set; }
 
-	public bool Verificado { get; set; }
+	public bool? Verificado { get; set; }
 
 	public string? Contraseña { get; set; }
 

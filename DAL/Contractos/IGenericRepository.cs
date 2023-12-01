@@ -14,7 +14,7 @@ namespace DAL.Contractos
 		public Task<bool> Delete(int id);
 		public Task<IEnumerable<Entity>> GetAll();
 
-		public Task<bool> ConfirmUser(Entity entity );
+		
 
 	}
 }

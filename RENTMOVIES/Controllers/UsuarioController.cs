@@ -17,6 +17,7 @@ namespace RENTMOVIES.Controllers
         private readonly IUsuarioRepositorio _repository;
         private readonly IMapper _mapper;
         private readonly IAuthServices _authService;
+        private readonly IDireccionRepository _directionRepository;
         private readonly IEmailService _emailService;
 
         public UsuarioController(IUsuarioRepositorio repository, IMapper mapper, IAuthServices authServices, IEmailService emailService)
@@ -24,6 +25,7 @@ namespace RENTMOVIES.Controllers
             this._repository = repository;
             this._mapper = mapper;
             this._authService = authServices;
+            this._directionRepository = direccionRepository;
             this._emailService = emailService;
         }
 
@@ -100,7 +102,7 @@ namespace RENTMOVIES.Controllers
                 }
 
                 // Validate if the user is verified
-
+                // REVISAR esta parte
                 if (!user.Verificado)
                 {
                     return Unauthorized(new { msg = "Please, confirm your account" });
