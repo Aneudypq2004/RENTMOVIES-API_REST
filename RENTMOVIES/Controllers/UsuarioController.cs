@@ -1,16 +1,12 @@
-﻿using DAL.Contractos;
-using DAL.Profiles;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ENTIDADES.Models;
-using AutoMapper;
-using DAL.DTO.Response;
-using DAL.DTO.Request;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using AutoMapper;
 using BAL.Services.IServices;
+using DAL.Contractos;
+using DAL.DTO.Response;
+using ENTIDADES.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace RENTMOVIES.Controllers
 {
@@ -21,12 +17,14 @@ namespace RENTMOVIES.Controllers
         private readonly IUsuarioRepositorio _repository;
         private readonly IMapper _mapper;
         private readonly IAuthServices _authService;
+        private readonly IEmailService _emailService;
 
-        public UsuarioController(IUsuarioRepositorio repository, IMapper mapper, IAuthServices authServices)
+        public UsuarioController(IUsuarioRepositorio repository, IMapper mapper, IAuthServices authServices, IEmailService emailService)
         {
             this._repository = repository;
             this._mapper = mapper;
             this._authService = authServices;
+            this._emailService = emailService;
         }
 
         // Create a new User
@@ -43,15 +41,47 @@ namespace RENTMOVIES.Controllers
 
                 var usuario = _mapper.Map<Usuario>(usuarioDTO);
 
+                //Validate if user already exist
+                Usuario emailExiste = await _repository.GetByEmail(usuarioDTO.Email);
+
+                if (emailExiste != null) return BadRequest(new { msg = "The email already exists" });
+
                 await _repository.Create(usuario);
+
+                await SendVerificationEmail(usuarioDTO);
 
                 return Ok(new { msg = "Account Created, Check your email" });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Excepción: {ex.Message}");
                 return BadRequest(ex);
             }
+        }
+
+        //CONFIRM EMAIL
+
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
+                return BadRequest(new { msg = "Invalid email confirmation URL" });
+
+
+            var user = await _repository.GetByUserName(userId);
+
+            if (user == null)
+                return NotFound($"Unable to load the user '{userId}'.");
+
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+
+            var userEmail = await _repository.GetByEmail(code);
+
+            if (userEmail == null)
+                return NotFound($"There has been an error confirming your email.");
+
+            return Ok("Thank you for confirming your email.");
+
         }
 
         // SIGN IN METHOD
@@ -95,7 +125,7 @@ namespace RENTMOVIES.Controllers
                 });
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Excepción: {ex.Message}");
                 return BadRequest();
@@ -111,7 +141,7 @@ namespace RENTMOVIES.Controllers
             {
                 Usuario user = await _repository.GetByToken(token);
 
-                if(user is null)
+                if (user is null)
                 {
                     return NotFound(new { msg = "The token is not valid" });
                 }
@@ -124,7 +154,7 @@ namespace RENTMOVIES.Controllers
             catch (Exception message)
             {
 
-                return BadRequest(new { msg = message }); 
+                return BadRequest(new { msg = message });
             }
 
         }
@@ -181,6 +211,19 @@ namespace RENTMOVIES.Controllers
 
                 return BadRequest(new { msg = message });
             }
+
+        }
+
+        private async Task SendVerificationEmail(UsuarioResponseDTO user)
+        {
+            var verificationCode = _authService.GenerateJWT(user.Email);
+            verificationCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(verificationCode));
+
+            var callbackUrl = $"{Request.Scheme}://{Request.Host}{Url.Action("ConfirmEmail", controller: "Usuario", new { userId = user.UserName, code = verificationCode })}";
+
+            var emailBody = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>";
+
+            await _emailService.SendEmailAsync(user.Email, "Confirm your email", emailBody);
 
         }
 
