@@ -36,6 +36,7 @@ namespace BAL.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                    new Claim(ClaimTypes.Email, email)
+                   
 
                 }),
 
