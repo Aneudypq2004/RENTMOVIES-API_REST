@@ -26,7 +26,6 @@ namespace DAL.Repositorios
         {
             _dbContext = dbContext;
             this._config = config;
-
         }
         // CREATE A USER
 
@@ -134,7 +133,7 @@ namespace DAL.Repositorios
 
         // FORGOT THE PASSWORD
 
-        public async Task<String> ForgotPassword(Usuario usuario)
+        public async Task<string> ForgotPassword(Usuario usuario)
         {
             try
             {
@@ -157,7 +156,7 @@ namespace DAL.Repositorios
 
         // Change the user Password
 
-        public async Task<String> ChangePassword(Usuario usuario)
+        public async Task<bool> ChangePassword(Usuario usuario, string password)
         {
             try
             {
@@ -165,13 +164,15 @@ namespace DAL.Repositorios
 
                 usuario.Token = null;
 
-                // IMPLEMENT LOGIG
+                usuario.Contraseña = BCrypt.Net.BCrypt.HashPassword(password);
+
+                // Save changes
 
                 _dbContext.Update(usuario);
 
                 await _dbContext.SaveChangesAsync();
 
-                return usuario.Token;
+                return true;
             }
             catch (Exception msg)
             {
@@ -298,6 +299,8 @@ namespace DAL.Repositorios
             Guid guid = Guid.NewGuid();
             return guid.ToString();
         }
+
+      
         //	Get the user
     }
 }

@@ -16,6 +16,10 @@ namespace DAL.Contractos
 
         Task<Usuario> GetByToken(string token);
 
-		public Task<bool> ConfirmUser(Usuario entity);
-	}
+		Task<bool> ConfirmUser(Usuario entity);
+
+		Task<String> ForgotPassword(Usuario entity);
+
+		Task<bool> ChangePassword(Usuario usuario, string password);
+    }
 }

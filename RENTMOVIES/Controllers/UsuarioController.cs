@@ -20,7 +20,9 @@ namespace RENTMOVIES.Controllers
         private readonly IDireccionRepository _directionRepository;
         private readonly IEmailService _emailService;
 
-        public UsuarioController(IUsuarioRepositorio repository, IMapper mapper, IAuthServices authServices, IDireccionRepository direccionRepository, IEmailService emailService)
+        public UsuarioController(IUsuarioRepositorio repository, IMapper mapper,
+            IAuthServices authServices, IDireccionRepository direccionRepository,
+            IEmailService emailService)
         {
             this._repository = repository;
             this._mapper = mapper;
@@ -62,7 +64,7 @@ namespace RENTMOVIES.Controllers
         }
 
         //CONFIRM EMAIL
-
+    /*
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
@@ -86,6 +88,8 @@ namespace RENTMOVIES.Controllers
 
         }
 
+        */
+
         // SIGN IN METHOD
 
         [HttpPost("Login")]
@@ -98,12 +102,12 @@ namespace RENTMOVIES.Controllers
 
                 if (user is null)
                 {
-                    return BadRequest(new { msg = "The user doesnt exists" });
+                    return NotFound(new { msg = "The user doesnt exists" });
                 }
 
                 // Validate if the user is verified
-                // REVISAR esta parte
-                if (!user.Verificado)
+
+                if (user.Verificado != true)
                 {
                     return Unauthorized(new { msg = "Please, confirm your account" });
 
@@ -122,7 +126,7 @@ namespace RENTMOVIES.Controllers
 
                 return Ok(new
                 {
-                    token = _authService.GenerateJWT(user.Email)
+                    token = _authService.GenerateJWT(usuario.Email)
 
                 });
 
@@ -137,7 +141,7 @@ namespace RENTMOVIES.Controllers
         // Confirm account
 
         [HttpGet("Confirm/{token}")]
-        public async Task<ActionResult> ConfirmAccount([FromRoute] String token)
+        public async Task<ActionResult> ConfirmAccount(String token)
         {
             try
             {
@@ -161,38 +165,40 @@ namespace RENTMOVIES.Controllers
 
         }
 
-        // Forgot PASSWORD
+        // Forgot PASSWORD  IMPLEMENTARARE
 
         [HttpPost("Forgot-password")]
-        public async Task<ActionResult> ForgotPassword([FromRoute] String token)
+        public async Task<ActionResult> ForgotPassword([FromBody] string email)
         {
             try
             {
-                Usuario user = await _repository.GetByToken(token);
+                Usuario user = await _repository.GetByEmail(email);
 
                 if (user is null)
                 {
                     return NotFound(new { msg = "The token is not valid" });
                 }
 
-                await _repository.ConfirmUser(user);
+                string TokenEmail = await _repository.ForgotPassword(user);
 
-                return Ok(new { msg = "Account verified successfully" });
+                // Send Email
+
+                return Ok(new { msg = "Check Your email" });
 
             }
-            catch (Exception message)
+            catch (Exception error)
             {
 
-                return BadRequest(new { msg = message });
+                return BadRequest(new { msg = error.Message });
             }
 
         }
 
 
-        // Change password
+        // Change password IMPLEMENTARARE
 
         [HttpPatch("Change-password/{token}")]
-        public async Task<ActionResult> ChangePassword([FromRoute] String token)
+        public async Task<ActionResult> ChangePassword(String token, [FromBody] ChangePassword userPass)
         {
             try
             {
@@ -203,15 +209,15 @@ namespace RENTMOVIES.Controllers
                     return NotFound(new { msg = "The token is not valid" });
                 }
 
-                await _repository.ConfirmUser(user);
+                await _repository.ChangePassword(user, userPass.Password);
 
-                return Ok(new { msg = "Account verified successfully" });
+                return Ok(new { msg = "Tha password has been changed" });
 
             }
-            catch (Exception message)
+            catch (Exception error)
             {
 
-                return BadRequest(new { msg = message });
+                return BadRequest(new { msg = error.Message });
             }
 
         }
